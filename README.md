@@ -164,7 +164,7 @@ CER = (Levenshtein Distance) / (Length of Ground Truth)
 | **Model not responding** | Check if the correct model is loaded and supports vision |
 | **ground_truth.csv not found** | Verify the path and format of your CSV file |
 | **Image not processed** | Check file format (JPG/PNG), permissions, and naming |
-| **Prediction = "ERROR"** | May be caused by API issues or invalid input |
+| **Prediction = "ERROR"** | Maybe caused by API issues or invalid input |
 | **Model timeout** | Consider increasing the timeout or using a lighter model |
 
 ---
