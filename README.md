@@ -168,10 +168,3 @@ CER = (Levenshtein Distance) / (Length of Ground Truth)
 | **Model timeout** | Consider increasing the timeout or using a lighter model |
 
 ---
-
-## Suggestions for Future Work
-
-- Add image preprocessing (e.g., grayscale, resizing)
-- Support more license plate formats (e.g., motorcycles)
-- Add confidence score parsing
-- Provide web or command-line interface for batch processing
