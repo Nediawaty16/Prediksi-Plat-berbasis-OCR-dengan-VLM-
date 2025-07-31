@@ -8,11 +8,11 @@ A Python application that performs Optical Character Recognition (OCR) on Indone
 ## Features
 
 - **Vision Language Model Support**: Supports models like `google/gemma-3-4b` via LMStudio
-- **LMStudio Integration**: Sends image-based queries through LMStudio's API
-- **Batch Processing**: Automatically process all images in the test folder
-- **Performance Evaluation**: Calculate CER for each prediction from the license plate image
-- **CSV Output**: Save comparison results in CSV format
-- **Robust Logging**: Prints errors and result summaries
+- **LMStudio Integration**: Communicates with LMStudio's local API to send images and receive predictions
+- **Batch Processing**: Automatically processes all images in the test folder
+- **Performance Evaluation**: Calculates Character Error Rate (CER) for each license plate prediction
+- **CSV Output**: Saves prediction results and comparisons to a CSV file
+- **Robust Logging**: Logs errors and provides summary statistics
 
 ---
 
@@ -28,37 +28,38 @@ pip install pandas tqdm python-Levenshtein
 
 ### System Requirements
 
-- **LMStudio**: Must be installed and running locally
+- **LMStudio**: Installed and running locally
 - **Python**: Version 3.7 or higher
-- **VLM Model**: Load a model that supports vision input (e.g., `google/gemma-3-4b`)
+- **VLM Model**: Load a vision-capable model (e.g., `google/gemma-3-4b`) in LMStudio
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 1. Clone or download the notebook file `Prediksi_Plate_With_VLM.ipynb`.
 2. Install the required Python libraries (see above).
-3. Install and start LMStudio with a supported model.
+3. Install LMStudio and load a compatible vision-language model.
+4. Start LMStudio with API access enabled.
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
-In the notebook, configure the following variables:
+In the notebook, configure the following variables according to your folder structure:
 
 ```python
-IMAGE_FOLDER = "test"                              # Path to folder containing images
-GROUND_TRUTH_CSV = os.path.join(IMAGE_FOLDER, "ground_truth.csv")  # Path to ground truth labels
-OUTPUT_CSV = "result.csv"                          # Path to save results
+IMAGE_FOLDER = "test"                              # Folder containing input images
+GROUND_TRUTH_CSV = os.path.join(IMAGE_FOLDER, "ground_truth.csv")  # Ground truth label CSV
+OUTPUT_CSV = "result.csv"                          # File path to store results
 MODEL_NAME = "google/gemma-3-4b"                   # Model name loaded in LMStudio
 ```
 
 ---
 
-## 📁 Dataset Structure
+## Dataset Structure
 
 ```
-project/
+Indonesian License Plate Recognition Dataset/
 ├── Prediksi_Plate_With_VLM.ipynb
 ├── test/
 │   ├── ground_truth.csv
@@ -77,23 +78,43 @@ plate002.png,D5678ABC
 
 ---
 
-## ▶️ Usage
+## Usage
 
-1. **Start LMStudio** with the selected VLM model (`gemma-3-4b`, etc.).
-2. **Open the notebook** in Jupyter or VSCode.
-3. **Run the cells sequentially**. The process includes:
-   - Loading the model via LMStudio
-   - Reading all test images
-   - Sending OCR prompts to the model
-   - Calculating CER
-   - Saving results to `result.csv`
-   - Printing performance summary
+1. **Start LMStudio** with the selected VLM model (e.g., `google/gemma-3-4b`).
+2. **Open the notebook** `Prediksi_Plate_With_VLM.ipynb` using Jupyter Notebook or VSCode.
+3. **Run all code cells sequentially**. The notebook will:
+   - Connect to LMStudio using the `lmstudio` Python library
+   - Read images from the dataset
+   - Send each image to the VLM model with an OCR prompt
+   - Receive predictions and compare with ground truth
+   - Calculate Character Error Rate (CER)
+   - Save results to `result.csv`
+   - Print summary statistics to the console
 
 ---
 
-## 📤 Output
+## LMStudio Integration
+
+This application integrates directly with LMStudio, which acts as a local inference server for Vision Language Models (VLMs).
+
+- The integration is handled using the `lmstudio` Python package:
+  ```python
+  import lmstudio as lms
+  ```
+- The library provides a high-level interface to:
+  - Load a local vision-language model
+  - Encode and send image prompts
+  - Receive text predictions from LMStudio’s local API
+
+> 📌 Ensure that LMStudio is running, and the selected model is properly loaded and supports image inputs.
+
+---
+
+## Output
 
 ### CSV File: `result.csv`
+
+The following fields will be saved:
 
 ```
 image,ground_truth,prediction,CER_score
@@ -101,7 +122,7 @@ plate001.jpg,B1234XYZ,B1234XYZ,0.0
 plate002.png,D5678ABC,D5678AC,0.125
 ```
 
-### Console Output:
+### Console Output Example:
 
 ```
 ✅ Selesai memproses semua gambar.
@@ -115,40 +136,42 @@ plate002.png,D5678ABC,D5678AC,0.125
 
 ---
 
-## 📏 CER Metric
+## Character Error Rate (CER)
 
-Character Error Rate (CER) is calculated as:
+CER is used to evaluate how close the predicted license plate is to the ground truth. It is calculated as:
 
 ```
 CER = (Levenshtein Distance) / (Length of Ground Truth)
 ```
 
 - `0.0` = perfect match
+- `0.1` = 10% character error rate
 - `1.0` = completely incorrect
 
 ---
 
-## 🧰 Troubleshooting
+## Tested Model
 
-| Issue | Solution |
-|-------|----------|
-| **LMStudio not detected** | Make sure LMStudio is running and the model is loaded |
-| **ground_truth.csv not found** | Ensure the path and format are correct |
-| **Image not processed** | Check image format (jpg, png) and path |
-| **Prediction = "ERROR"** | Could be API issue or image read failure |
-| **Model timeout** | Increase timeout in the `respond()` function or optimize model settings |
+- `google/gemma-3-4b` — confirmed working in LMStudio for Indonesian license plate OCR.
 
 ---
 
-## ✅ Tested Model
+## Troubleshooting
 
-- **google/gemma-3-4b** (via LMStudio): Works well for Indonesian license plates
+| Issue | Possible Cause / Solution |
+|-------|---------------------------|
+| **LMStudio not detected** | Ensure LMStudio is running and API access is enabled |
+| **Model not responding** | Check if the correct model is loaded and supports vision |
+| **ground_truth.csv not found** | Verify the path and format of your CSV file |
+| **Image not processed** | Check file format (JPG/PNG), permissions, and naming |
+| **Prediction = "ERROR"** | May be caused by API issues or invalid input |
+| **Model timeout** | Consider increasing the timeout or using a lighter model |
 
 ---
 
-## 💡 Suggestions for Future Work
+## Suggestions for Future Work
 
-- Add support for image preprocessing (e.g., contrast enhancement)
-- Extend evaluation with confidence scores
-- Integrate GUI or command-line interface
-- Adapt to other formats (motorcycles, foreign plates)
+- Add image preprocessing (e.g., grayscale, resizing)
+- Support more license plate formats (e.g., motorcycles)
+- Add confidence score parsing
+- Provide web or command-line interface for batch processing
