@@ -5,18 +5,18 @@ A Python application that performs Optical Character Recognition (OCR) on Indone
 
 ---
 
-## ✨ Features
+## Features
 
 - **Vision Language Model Support**: Supports models like `google/gemma-3-4b` via LMStudio
 - **LMStudio Integration**: Sends image-based queries through LMStudio's API
-- **Batch Processing**: Automatically processes all images in a given folder
-- **Performance Evaluation**: Calculates CER for each prediction
-- **CSV Output**: Saves result comparisons in CSV format
+- **Batch Processing**: Automatically process all images in the test folder
+- **Performance Evaluation**: Calculate CER for each prediction from the license plate image
+- **CSV Output**: Save comparison results in CSV format
 - **Robust Logging**: Prints errors and result summaries
 
 ---
 
-## ⚙️ Requirements
+## Requirements
 
 ### Software Dependencies
 
