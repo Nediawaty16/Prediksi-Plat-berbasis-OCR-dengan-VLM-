@@ -1,2 +1,3 @@
-# Prediksi-Plat-berbasis-OCR-dengan-VLM-
-Pembelajaran Computer Vision
+# OCR License Plate Recognition with Vision Language Models
+
+
